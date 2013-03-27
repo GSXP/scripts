@@ -66,6 +66,9 @@ class HeroBehavior extends NPCBehavior {
 		}
 		
 		else {
+			stats.setDamageRatio(1);
+			stats.resetMoveSpeed();
+			stats.resetAttackSpeed();
 			gameObject.renderer.material.color = Color.white;
 		}
 	}
