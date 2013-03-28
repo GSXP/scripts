@@ -1,4 +1,5 @@
 #pragma strict
+#pragma downcast
 
 import System.Collections.Generic;
 
@@ -196,5 +197,7 @@ public class ShortestPath{
 				}
 			}
 		}
+		
+		return null;
 	}
 };
