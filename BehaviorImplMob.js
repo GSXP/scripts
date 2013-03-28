@@ -105,24 +105,13 @@ class MobBehavior extends NPCBehavior {
 	}
 	
 	function FireSpell() {
-		if (onFire > 0) {
-			onFire = 0;
-		}
-		else {
-			// visibily aflame
-			onFire = 3;
-			frozen = 0; // you can only be one or the other
-		}
+		onFire = 3;
+		frozen = 0; // you can only be one or the other
 	}
 	
 	function IceSpell() {
-		if (frozen > 0) {
-			frozen = 0;
-		}
-		else {
-			frozen = 3;
-			onFire = 0; // you can only be one or the other
-		}
+		frozen = 3;
+		onFire = 0; // you can only be one or the other
 	}
 
 	function die() {

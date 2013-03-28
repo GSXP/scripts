@@ -56,13 +56,17 @@ class HeroBehavior extends NPCBehavior {
 		
 		if (speedy > 0) {
 			speedy -= Time.deltaTime;
+			stats.resetMoveSpeed();
+			stats.resetAttackSpeed();
+			stats.modMoveSpeed(1.6);
+			stats.modAttackSpeed(1.6);
 			gameObject.renderer.material.color = Color.red;
 		}
 		
 		else if (solid > 0) {
 			solid -= Time.deltaTime;
-			gameObject.renderer.material.color = Color.black;
 			stats.setDamageRatio(0.5);
+			gameObject.renderer.material.color = Color.black;
 		}
 		
 		else {
@@ -74,28 +78,13 @@ class HeroBehavior extends NPCBehavior {
 	}
 	
 	function FireSpell() {
-		if (speedy > 0) {
-			speedy = 0;
-			stats.resetMoveSpeed(); // normal movement speed
-			stats.resetAttackSpeed(); // normal attack speed
-		}
-		else {
-			speedy = 3; // 3 seconds
-			stats.modMoveSpeed(1.6);
-			stats.modAttackSpeed(1.6);
-			solid = 0; // you can only be one or the other
-		}
+		speedy = 3; // 3 seconds
+		solid = 0; // you can only be one or the other
 	}
 	
 	function IceSpell() {
-		if (solid > 0) {
-			solid = 0;
-			stats.setDamageRatio(1); // normal damage ratio
-		}
-		else {
-			solid = 3; // 3 seconds
-			speedy = 0; // you can only be one or the other
-		}
+		solid = 3; // 3 seconds
+		speedy = 0; // you can only be one or the other
 	}
 
 }
