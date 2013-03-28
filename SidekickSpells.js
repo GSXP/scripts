@@ -6,22 +6,52 @@ var iceTexture : Texture;
 var spellType : int = 0;
 var targetType : int = 0; // 0 = Mob, 1 = Hero
 var closestObjectLocation : Vector3 = Vector3.zero;
+var stats : Stats;
 private var tScale : int = 120;
 private var hScale : int = 45;
 
 private var rightMouseDown : boolean = false;
+private var mousePosition : Vector3 = Vector3.zero;
+
+function Start() {
+	stats = gameObject.GetComponent(Stats);
+}
 
 // Used to display the target if holding down the mouse button
 function OnGUI() {
 	if (Input.GetMouseButton(0)) {
+		// get relative mouse position
+		mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		mousePosition.z = 0;
+
 		target = Input.mousePosition;
 		var targetTexture = spellType == 0 ? fireTexture : iceTexture;
 		target.y = Screen.height - target.y;
 		GUI.DrawTexture (Rect (target.x-tScale, target.y-tScale, 2*tScale, 2*tScale),
 				targetTexture, ScaleMode.ScaleToFit);
 		getClosestObject();
-		closestObjectLocation.y = Screen.height - closestObjectLocation.y;
-		GUI.Box (Rect (closestObjectLocation.x-hScale, closestObjectLocation.y-hScale, 2*hScale, 2*hScale),'');
+		
+		// highlight all objects that will be affected by spell-cast
+		if (targetType == 0) { // Mob targeted
+			for (var Mob : GameObject in GameObject.FindGameObjectsWithTag("Mob")) {
+				// make sure he is within spell range
+				if (Vector3.Distance (Mob.transform.position, mousePosition) <= stats.getSpellRange()) {
+					// find his relative position
+					var mobPosition = Camera.main.WorldToScreenPoint(Mob.transform.position);
+					// highlight him
+					GUI.Box (Rect (mobPosition.x-hScale, Screen.height - mobPosition.y-hScale, 2*hScale, 2*hScale),'');
+				}
+			}
+		}
+		else { // Hero Targeted
+			// make sure he is within spell range
+			if (Vector3.Distance (GameObject.Find('Hero').transform.position, mousePosition) <= stats.getSpellRange()) {
+				// find his relative position
+				var heroPosition = Camera.main.WorldToScreenPoint(GameObject.Find('Hero').transform.position);
+				// highlight him
+				GUI.Box (Rect (heroPosition.x-hScale, Screen.height - heroPosition.y-hScale, 2*hScale, 2*hScale),'');
+			}
+		}
     }
 }
 
