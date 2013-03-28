@@ -8,6 +8,9 @@ class NPCBehavior extends IBehavior {
 	protected var combat : Combat; // The NPC's combat component
 	protected var movement : NPCMovement; // The NPC's movement component
 	protected var stats : Stats; // The NPC's Stats
+	protected var moving : boolean;
+	protected var stopCount : int;
+	protected var patrol : Vector3;
 	
 	function NPCBehavior(go : GameObject) {
 		super(go);
@@ -15,6 +18,8 @@ class NPCBehavior extends IBehavior {
 		movement = gameObject.GetComponent(NPCMovement);
 		stats = gameObject.GetComponent(Stats);
 		targetPriority = 4; // 4 is lowest priority (anything is more important than nothing)
+		moving = false;
+		stopCount = 0;
 	}
 	
 	function GotHit(attacker : GameObject) {
@@ -71,6 +76,20 @@ class NPCBehavior extends IBehavior {
 	function Update() {
 		if (currentTarget != null) {
 			movement.setTarget(currentTarget.transform.position);
+		} else if (moving) {
+			movement.setTarget(patrol);
+			if(movement.target == gameObject.transform.position){
+				stopCount++;
+				if(stopCount == 100){
+					moving = false;
+					stopCount = 0;
+				}
+			}
+		} else {
+			var newX = super.currentRoom.transform.position.x + (Random.value - .5) * 28;
+			var newY = super.currentRoom.transform.position.y + (Random.value - .5) * 12;
+			patrol = Vector3(newX, newY, 0);
+			moving = true;
 		}
 	}
 	
