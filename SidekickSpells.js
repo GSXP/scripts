@@ -5,7 +5,9 @@ var fireTexture : Texture;
 var iceTexture : Texture;
 var spellType : int = 0;
 var targetType : int = 0; // 0 = Mob, 1 = Hero
+var closestObjectLocation : Vector3 = Vector3.zero;
 private var tScale : int = 120;
+private var hScale : int = 45;
 
 private var rightMouseDown : boolean = false;
 
@@ -17,12 +19,15 @@ function OnGUI() {
 		target.y = Screen.height - target.y;
 		GUI.DrawTexture (Rect (target.x-tScale, target.y-tScale, 2*tScale, 2*tScale),
 				targetTexture, ScaleMode.ScaleToFit);
-		targetType = closestObjectType();
+		getClosestObject();
+		closestObjectLocation.y = Screen.height - closestObjectLocation.y;
+		GUI.Box (Rect (closestObjectLocation.x-hScale, closestObjectLocation.y-hScale, 2*hScale, 2*hScale),'');
     }
 }
 
-function closestObjectType() {
+function getClosestObject() {
 	target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+	var tempClosest : GameObject;
 	var HeroObject = GameObject.FindGameObjectWithTag("Hero");
 	var heroDistance = Vector3.Distance(HeroObject.transform.position, target);
 	
@@ -31,10 +36,16 @@ function closestObjectType() {
 	{
 		var tempDist = Vector3.Distance(Mob.transform.position, target);
 		if (tempDist < mobDistance)
+		{
 			mobDistance = tempDist;
+			tempClosest = Mob;
+		}
 	}
 
-	return mobDistance < heroDistance ? 0 : 1;
+	closestObjectLocation = mobDistance < heroDistance ? 
+			Camera.main.WorldToScreenPoint(tempClosest.transform.position) : 
+			Camera.main.WorldToScreenPoint(HeroObject.transform.position);
+	targetType = mobDistance < heroDistance ? 0 : 1;
 }
 
 function Update () {
@@ -54,5 +65,7 @@ function Update () {
 		if (targetType == 1)
 			for (var Hero : GameObject in GameObject.FindGameObjectsWithTag("Hero"))
 			    Hero.GetComponent(Behavior).CheckSpellRange(target, spellType);
+			    
+		closestObjectLocation = Vector3.zero;
 	}
 }
