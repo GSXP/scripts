@@ -49,7 +49,7 @@ function OnTriggerEnter(collidee : Collider) {
 	var destination_pos : Vector3 = targetDoor.transform.position;
 	var starting_pos: Vector3 = this.transform.position;
 	var door_width = 4; // estimation
-	var door_height = 3; // estimation
+	var door_height = 4; // estimation
 	
 	// determine which direction we're teleporting
 	var x_offset : double = 0;
