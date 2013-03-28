@@ -4,7 +4,7 @@ function Start () {
 	var whoami : String = gameObject.name;
 	var X : float = 7; // From the design presetation
 	if (whoami == "Sidekick") {
-		loadStats(20, 0, 0, 1.5 * X, 0, 0);
+		loadStats(20, 0, 0, 1.5 * X, 5, 5);
 	} else if (whoami == "Hero") {
 		loadStats(100, 10, 2.0, X, 5, 2.5);
 	} else if (whoami == "Mob") {
