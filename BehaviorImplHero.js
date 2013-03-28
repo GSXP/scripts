@@ -106,6 +106,8 @@ class HeroBehavior extends NPCBehavior {
 	}
 	
 	function Update() {
+		CheckAggroRange();
+	
 		super.Update();
 
 		if (speedy > 0) {
@@ -139,6 +141,22 @@ class HeroBehavior extends NPCBehavior {
 	function IceSpell() {
 		solid = 3; // 3 seconds
 		speedy = 0; // you can only be one or the other
+	}
+	
+	function CheckAggroRange() {
+		// are there mobs in this room?
+		var thisRoom = currentRoom.GetComponent(RoomController);
+		if (thisRoom.mobsInThisRoom.Count > 0) {
+			// look through mobs in current room
+			for (mob in thisRoom.mobsInThisRoom) {
+				// is the mob within the sight range of the hero?
+				if (Vector3.Distance(mob.transform.position, gameObject.transform.position) <= super.stats.getSightRange()) {
+					// target!
+					super.setTarget(mob, 4);
+					break;
+				}
+			}
+		}
 	}
 
 }
