@@ -4,6 +4,8 @@
 class HeroBehavior extends NPCBehavior {
 	// A hit list to remember who to attack next
 	private var hitList : HitList;
+	private var pathToBoss : ShortestPath;
+	private var bossRoom : GameObject;
 	
 	// special states
 	var speedy : double = 0;
@@ -12,6 +14,8 @@ class HeroBehavior extends NPCBehavior {
 	function HeroBehavior(go : GameObject) {
 		super(go);
 		hitList = new HitList();
+		bossRoom = GameObject.Find("BossRoom");
+		pathToBoss = new ShortestPath();
 	}
 	
 	function GotHit(attacker : GameObject) {
@@ -22,10 +26,70 @@ class HeroBehavior extends NPCBehavior {
 	function TargetDead() {
 		super.TargetDead();
 		// Get the next target from the hit list
-		if (hitList.size() > 0) {
+		while (hitList.size() > 0) {
 			var pt : PriorityTarget = hitList.PopTarget();
-			super.setTarget(pt.target, pt.priority);
+			if (pt.target.GetComponent(Behavior).getRoom() == super.currentRoom) {
+				// In other words, ignore bad guys on the hitlist that aren't in the same room
+				super.setTarget(pt.target, pt.priority);
+				return;
+			}
 		}
+		// Hit list is empty... ask the room if there are any baddies left
+		if(super.currentRoom.GetComponent(RoomController).mobCount() == 0) {
+			pickNextDoor();
+		}
+	}
+	
+	function pickNextDoor() {
+		
+		if (bossRoom != null) {
+			pathToBoss = new ShortestPath(); // Resetting shortest path
+			var nextDoor : GameObject = pathToBoss.NextDoorTowardEnd(super.currentRoom, bossRoom);
+			super.setTarget(nextDoor, 4);
+			//Debug.Log("Hero in " + super.currentRoom
+			return;
+		}
+		
+		Debug.Log("WARNING! Cannot find BossRoom. Hero picking random door");
+		
+		// Grab all the doors in this room
+		var doors : DoorController[] = super.currentRoom.GetComponentsInChildren.<DoorController>();
+		
+		// Pick a random one
+		var i : int = Random.value * 4;
+		
+		// start at the random door and cycle around all 4 until you find one that goes somewhere
+		var door : DoorController;
+		for (var j : int = 0; j < 4; j++) {
+			door = doors[(i + j) % 4];
+			if (door.targetDoor != null) {
+				// This door leads somewhere
+				super.setTarget(door.gameObject, 4);			
+				return;
+			}
+		}
+		
+		// Sanity Check
+		Debug.Log("Hero here! I'm in a room with no doors!");
+	}
+	
+	function setRoom(room : GameObject) {
+		super.setRoom(room);
+		// in a brand new room, do i have a target already?
+		if (super.currentTarget != null) {
+			// if my target was a door, drop it
+			if(super.currentTarget.GetComponent(DoorController) != null)
+				super.TargetDead();	// Technically doors cant die but WHATEVER
+			else 
+				return; // I've got a mob target so don't do anything
+		}
+		
+		// is the room empty? (Should i move on?)
+		if(super.currentRoom.GetComponent(RoomController).mobCount() == 0) {
+			pickNextDoor();
+		}
+		
+		// Otherwise i'll start patrolling thanks to ImplNPC
 	}
 	
 	function FoundNewTarget(newTarget : GameObject, priority : int) {
@@ -42,18 +106,8 @@ class HeroBehavior extends NPCBehavior {
 	}
 	
 	function Update() {
-		// temp: pick a target at random
-		if (super.currentTarget == null) {
-			var random_mob = GameObject.Find("Mob");
-			// make sure one exists
-			if (random_mob) {
-				// chase with lowest priority
-				Debug.Log("hero: choosing new random target");
-				FoundNewTarget(random_mob, 4);
-			}
-		}
 		super.Update();
-		
+
 		if (speedy > 0) {
 			speedy -= Time.deltaTime;
 			stats.resetMoveSpeed();

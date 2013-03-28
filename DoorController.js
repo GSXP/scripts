@@ -6,7 +6,7 @@ var targetDoor : DoorController;
 // Make this a list if multiple objects can come through at once
 private var inboundObjects : List.<GameObject>;
 
-function Start() {
+function Awake() {
 	// If I'm a door that goes somewhere
 	if (targetDoor != null) {	
 		// render me

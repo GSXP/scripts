@@ -6,7 +6,7 @@ var mobsInThisRoom : List.<GameObject>;
 private var heroIsHere : boolean;
 private var sidekickIsHere : boolean;
 
-function Start() {
+function Awake() {
 	mobsInThisRoom = new List.<GameObject>();
 	heroIsHere = false;
 	sidekickIsHere = false;
@@ -20,20 +20,28 @@ function isSidekickHere() {
 	return sidekickIsHere;
 }
 
+function mobCount() : int {
+	return mobsInThisRoom.Count;
+}
+
 function OnTriggerEnter(objCollider : Collider) {
-	switch (objCollider.name) {
+	var object : GameObject = objCollider.gameObject;
+	switch (object.name) {
 		case "Hero":
+			if (heroIsHere) return;
 			heroIsHere = true;
 			break;
 		case "Mob":
-			mobsInThisRoom.Add(objCollider.gameObject);
+			if(mobsInThisRoom.Contains(object)) return;
+			mobsInThisRoom.Add(object);
 			break;
 		case "Sidekick":
+			if (sidekickIsHere) return;
 			sidekickIsHere = true;
 			break;
 	}
 	
-	objCollider.gameObject.GetComponent(Behavior).setRoom(gameObject);
+	object.GetComponent(Behavior).setRoom(gameObject);
 }
 
 function OnTriggerExit(objCollider : Collider) {

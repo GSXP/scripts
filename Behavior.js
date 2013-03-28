@@ -34,7 +34,7 @@ function Start() {
 	var rooms : RoomController[] = GameObject.FindObjectsOfType(RoomController);
 	for (var room : RoomController in rooms) {
 		if (room.gameObject.collider.bounds.Contains(gameObject.transform.position)) {
-			room.OnTriggerEnter(gameObject.collider);
+			room.OnTriggerEnter(collider);
 			return;
 		}
 	}

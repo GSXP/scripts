@@ -62,6 +62,9 @@ class NPCBehavior extends IBehavior {
 		currentTarget = newTarget;
 		targetPriority = priority;
 		combat.target = currentTarget;
+		
+		// Don't try to patrol to you're last position, just calc a new one
+		moving = false;
 	}
 	
 	function ClearTarget() {
