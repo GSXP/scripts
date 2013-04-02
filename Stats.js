@@ -6,7 +6,7 @@ function Start () {
 	if (whoami == "Sidekick") {
 		loadStats(20, 0, 0, 1.5 * X, 5, 5);
 	} else if (whoami == "Hero") {
-		loadStats(100, 10, 2.0, X, 5, 2.5);
+		loadStats(100, 10, 2.0, X, 8, 5);
 	} else if (whoami == "Mob") {
 		loadStats(50, 5, 0.66, X, 5, 5);
 	} else {
@@ -109,7 +109,10 @@ function hurtHealth(damage : int) {
 }
 	
 function healHealth(life : int) {
-	Health += life;
+	if (Health + life > MaxHealth)
+		healAllHealth();
+	else
+		Health += life;
 }
 
 function healAllHealth() {
