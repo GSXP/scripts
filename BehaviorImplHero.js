@@ -133,6 +133,14 @@ class HeroBehavior extends NPCBehavior {
 		}
 	}
 	
+	function InstaHeal() {
+		stats.healHealth(25);
+	}
+	
+	function HealOverTime() {
+		// fill in later....
+	}
+	
 	function FireSpell() {
 		speedy = 3; // 3 seconds
 		solid = 0; // you can only be one or the other

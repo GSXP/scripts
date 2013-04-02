@@ -32,15 +32,25 @@ class NPCBehavior extends IBehavior {
 		}
 	}
 
-	function CheckSpellRange(target : Vector3, spellType : int) {
+	function CheckSpellRange(target : Vector3, spellType : int, spellVersion : int) {
 		var distance = Mathf.Sqrt( (target.x - gameObject.transform.position.x)*(target.x - gameObject.transform.position.x) + (target.y - gameObject.transform.position.y)*(target.y - gameObject.transform.position.y) );
 		
 		if(stats.getSpellRange() >= distance) { 
 			// in range!
 			if (spellType == 0)
-				FireSpell();
+			{
+				if (spellVersion == 0)
+					InstaHeal();
+				else if (spellVersion == 1)
+					HealOverTime();
+			}
 			else if (spellType == 1)
-				IceSpell();
+			{
+				if (spellVersion == 0)
+					FireSpell();
+				else if (spellVersion == 1)
+					IceSpell();
+			}
 		}
 		else {
 			// nothing to see here . .

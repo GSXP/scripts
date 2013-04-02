@@ -104,6 +104,10 @@ class MobBehavior extends NPCBehavior {
 		}
 	}
 	
+	// These don't do anything for baddies
+	function InstaHeal() {}
+	function HealOverTime() {}
+	
 	function FireSpell() {
 		onFire = 3;
 		frozen = 0; // you can only be one or the other

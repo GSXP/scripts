@@ -61,6 +61,16 @@ function Update() {
 	myBehavior.Update();
 }
 
+// insta-heal
+function InstaHeal() {
+	myBehavior.InstaHeal();
+}
+
+// heal over time
+function HealOverTime() {
+	myBehavior.HealOverTime();
+}
+
 // fire
 function FireSpell() {
 	myBehavior.FireSpell();
@@ -72,8 +82,8 @@ function IceSpell() {
 }
 
 // Check if I'm in range of a spell cast
-function CheckSpellRange(target : Vector3, spellType: int) {
-	myBehavior.CheckSpellRange(target, spellType);
+function CheckSpellRange(target : Vector3, spellType: int, spellVersion : int) {
+	myBehavior.CheckSpellRange(target, spellType, spellVersion);
 }
 
 function setRoom(room : GameObject) {
@@ -111,6 +121,12 @@ private class IBehavior {
 	// And here's access to the Update Function
 	function Update() {}
 	
+	// insta-heal
+	function InstaHeal() {}
+	
+	// heal over time
+	function HealOverTime() {}
+	
 	// fire
 	function FireSpell() {}
 	
@@ -118,5 +134,5 @@ private class IBehavior {
 	function IceSpell() {}
 
 	// Check if I'm in range of a spell cast
-	function CheckSpellRange(target : Vector3, spellType : int) {}
+	function CheckSpellRange(target : Vector3, spellType : int, spellVersion : int) {}
 }

@@ -1,9 +1,12 @@
 #pragma strict
 
 var target : Vector3 = Vector3.zero;
+var healTexture : Texture;
 var fireTexture : Texture;
 var iceTexture : Texture;
-var spellType : int = 0;
+var spellType : int = 0; // 0 = Heal, 1 = Buff/Debuff
+var healType : int = 0; // 0 = Insta-heal, 1 = Heal over time
+var buffType : int = 0; // 0 = Fire, 1 = Ice
 var targetType : int = 0; // 0 = Mob, 1 = Hero
 var closestObjectLocation : Vector3 = Vector3.zero;
 var stats : Stats;
@@ -25,7 +28,8 @@ function OnGUI() {
 		mousePosition.z = 0;
 
 		target = Input.mousePosition;
-		var targetTexture = spellType == 0 ? fireTexture : iceTexture;
+		var buffTexture = buffType == 0 ? fireTexture : iceTexture;
+		var targetTexture = spellType == 0 ? healTexture : buffTexture;
 		target.y = Screen.height - target.y;
 		GUI.DrawTexture (Rect (target.x-tScale, target.y-tScale, 2*tScale, 2*tScale),
 				targetTexture, ScaleMode.ScaleToFit);
@@ -84,17 +88,18 @@ function Update () {
 		spellType = (spellType + 1) % 2;
 	}
 	
-	// left click: cast current spell (0 = fire, 1 = ice)
+	// left click: cast current spell (0 = heal, 1 = buff/debuff)
 	if (Input.GetMouseButtonUp(0)) {
+		var spellVersion = spellType == 0 ? healType : buffType;
 		target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		target.z = 0;
 		// This requires that all enemies have the tag 'Mob'
 		if (targetType == 0)
 			for (var Mob : GameObject in GameObject.FindGameObjectsWithTag("Mob"))
-			    Mob.GetComponent(Behavior).CheckSpellRange(target, spellType);
+			    Mob.GetComponent(Behavior).CheckSpellRange(target, spellType, spellVersion);
 		if (targetType == 1)
 			for (var Hero : GameObject in GameObject.FindGameObjectsWithTag("Hero"))
-			    Hero.GetComponent(Behavior).CheckSpellRange(target, spellType);
+			    Hero.GetComponent(Behavior).CheckSpellRange(target, spellType, spellVersion);
 			    
 		closestObjectLocation = Vector3.zero;
 	}
