@@ -101,7 +101,10 @@ function Update () {
 	// left click: cast current spell (0 = heal, 1 = buff/debuff)
 	if (Input.GetMouseButtonUp(0) && (spellType == 0 ? healCooldown : buffCooldown) <= 0) {
 		// Set cooldown
-		(spellType == 0 ? healCooldown : buffCooldown) = 3;
+		if(spellType == 0)
+			healCooldown = 3;
+		else
+			buffCooldown = 3;
 
 		var spellVersion = spellType == 0 ? healType : buffType;
 		target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
