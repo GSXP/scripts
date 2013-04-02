@@ -4,6 +4,8 @@ var target : Vector3 = Vector3.zero;
 var healTexture : Texture;
 var fireTexture : Texture;
 var iceTexture : Texture;
+var healCooldown : double = 0;
+var buffCooldown : double = 0;
 var spellType : int = 0; // 0 = Heal, 1 = Buff/Debuff
 var healType : int = 0; // 0 = Insta-heal, 1 = Heal over time
 var buffType : int = 0; // 0 = Fire, 1 = Ice
@@ -22,7 +24,9 @@ function Start() {
 
 // Used to display the target if holding down the mouse button
 function OnGUI() {
-	if (Input.GetMouseButton(0)) {
+	if (Input.GetMouseButton(0) && 
+	((spellType == 0 ? healCooldown : buffCooldown) <= 0)) {
+		
 		// get relative mouse position
 		mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		mousePosition.z = 0;
@@ -34,6 +38,7 @@ function OnGUI() {
 		GUI.DrawTexture (Rect (target.x-tScale, target.y-tScale, 2*tScale, 2*tScale),
 				targetTexture, ScaleMode.ScaleToFit);
 		getClosestObject();
+		
 		
 		// highlight all objects that will be affected by spell-cast
 		if (targetType == 0) { // Mob targeted
@@ -83,13 +88,21 @@ function getClosestObject() {
 }
 
 function Update () {
+	if(healCooldown > 0)
+		healCooldown -= Time.deltaTime;
+	if(buffCooldown > 0)
+		buffCooldown -= Time.deltaTime;
+	
 	// Toggle spell type
 	if (Input.GetKeyDown(KeyCode.E)) {
 		spellType = (spellType + 1) % 2;
 	}
 	
 	// left click: cast current spell (0 = heal, 1 = buff/debuff)
-	if (Input.GetMouseButtonUp(0)) {
+	if (Input.GetMouseButtonUp(0) && (spellType == 0 ? healCooldown : buffCooldown) <= 0) {
+		// Set cooldown
+		(spellType == 0 ? healCooldown : buffCooldown) = 3;
+
 		var spellVersion = spellType == 0 ? healType : buffType;
 		target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		target.z = 0;
