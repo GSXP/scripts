@@ -3,6 +3,10 @@
 public var titleMusic : AudioClip;
 public var titleBanner : Texture2D;
 
+// Spell types to pass into the actual game portion
+public var healType : int; // 0 for insta-heal, 1 for heal over time
+public var buffType : int; // 0 for fire, 1 for ice
+
 private var stage : int;
 private var fadein : boolean;
 private var timeLeft : float;
@@ -17,6 +21,7 @@ function Start () {
 	timeLeft = 3;
 	bannerX = Screen.width / 2 - 256;
 	bannerY = Screen.height / 2 - 64;
+	DontDestroyOnLoad(this);
 }
 
 function Update () {
@@ -131,6 +136,7 @@ function stage6() {
 	GUI.DrawTexture(Rect(bannerX,bannerY,512,128),titleBanner);
 	var pressed : int = drawChoice("Instant Heal", "Heal Over Time");
 	if (pressed != 0) {
+		healType = pressed-1;
 		++stage;
 	}
 }
@@ -164,6 +170,7 @@ function stage9() {
 	GUI.DrawTexture(Rect(bannerX,bannerY,512,128),titleBanner);
 	var pressed : int = drawChoice("Fire", "Ice");
 	if (pressed != 0) {
+		buffType = pressed-1;
 		++stage;
 	}
 }

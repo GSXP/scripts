@@ -25,4 +25,27 @@ class SidekickBehavior extends IBehavior {
 			GameObject.Destroy(gameObject);
 		}
 	}
+	
+	function CheckSpellRange(target : Vector3, spellType : int, spellVersion : int) {
+		if (spellType == 0)
+		{
+			if (spellVersion == 0)
+				InstaHeal();
+			else if (spellVersion == 1)
+				HealOverTime();
+		}
+		else {
+			// nothing to see here . .
+			return;
+		}
+	}
+	
+	function InstaHeal() {
+		stats.healHealth(7);
+	}
+	
+	function HealOverTime() {
+		// fill in later....
+	}
+	
 }
