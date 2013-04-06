@@ -44,8 +44,9 @@ class SidekickBehavior extends IBehavior {
 		stats.healHealth(7);
 	}
 	
+	// We'll need to make the cooldown on these longer....
 	function HealOverTime() {
-		// fill in later....
+		stats.healOverTime(1, 10);
 	}
 	
 }

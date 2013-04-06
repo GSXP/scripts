@@ -115,6 +115,25 @@ function healHealth(life : int) {
 		Health += life;
 }
 
+private var healOverTimeLength : int;
+private var healOverTimeAmount : int;
+
+function healOverTime(amount : int, time : int) {
+	healOverTimeAmount = amount;
+	healOverTimeLength = time;
+	InvokeRepeating("healOverTimeHelper", 0, 1);
+}
+
+function healOverTimeHelper() {
+	healOverTimeLength--;
+	healHealth(healOverTimeAmount);
+	if (healOverTimeLength <= 0) {
+		CancelInvoke("healOverTimeHelper");
+		healOverTimeAmount = 0;
+		healOverTimeLength = 0;
+	}
+}
+
 function healAllHealth() {
 	Health = MaxHealth;
 }

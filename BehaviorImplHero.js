@@ -137,8 +137,9 @@ class HeroBehavior extends NPCBehavior {
 		stats.healHealth(25);
 	}
 	
+	// We'll need to make the cooldown on these longer....
 	function HealOverTime() {
-		// fill in later....
+		stats.healOverTime(3, 15);
 	}
 	
 	function FireSpell() {
