@@ -45,7 +45,7 @@ function OnGUI() {
     }
 }
 
-function highlightTarget(mousePosition) {
+function highlightTarget(mousePosition : Vector3) {
 	// highlight all objects that will be affected by spell-cast
 	if (targetType == 0) { // Mob targeted
 		for (var Mob : GameObject in GameObject.FindGameObjectsWithTag("Mob")) {
