@@ -1,6 +1,5 @@
 #pragma strict
 
-public var titleMusic : AudioClip;
 public var titleBanner : Texture2D;
 
 // Spell types to pass into the actual game portion
@@ -34,24 +33,8 @@ function Update () {
 		}
 	}
 	if (stage == 11) {
-		Destroy(music.gameObject);
 		Application.LoadLevel(1);
 	}
-}
-
-function Awake() {
-	music = PlayClipAt(titleMusic, Camera.main.transform.position);
-}
-
-function PlayClipAt(clip: AudioClip, pos: Vector3): AudioSource {
-  var tempGO = GameObject("TempAudio"); // create the temp object
-  tempGO.transform.position = pos; // set its position
-  var aSource = tempGO.AddComponent(AudioSource); // add an audio source
-  aSource.clip = clip; // define the clip
-  // set other aSource properties here, if desired
-  aSource.Play(); // start the sound
-  Destroy(tempGO, clip.length); // destroy object after clip duration
-  return aSource; // return the AudioSource reference
 }
 
 function OnGUI() {	
