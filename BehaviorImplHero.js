@@ -43,10 +43,9 @@ class HeroBehavior extends NPCBehavior {
 	function pickNextDoor() {
 		
 		if (bossRoom != null) {
-			//pathToBoss = new ShortestPath(); // Resetting shortest path
+			pathToBoss = new ShortestPath(); // Resetting shortest path
 			var nextDoor : GameObject = pathToBoss.NextDoorTowardEnd(super.currentRoom, bossRoom);
 			super.setTarget(nextDoor, 4);
-			//Debug.Log("Hero in " + super.currentRoom
 			return;
 		}
 		
