@@ -27,17 +27,17 @@ class TreasureMaker{
 		return treasure;
 	}
 	
-	function makeHealthQuarter(position : Vector3){
+	function makePotion5(position : Vector3){
 		var treasure : GameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 		treasure.transform.position = position;
-		treasure.AddComponent("HealthQuarterComponent");
+		treasure.AddComponent("Potion5Component");
 		return treasure;
 	}
 	
-	function makeHealthWhole(position : Vector3){
+	function makePotion20(position : Vector3){
 		var treasure : GameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 		treasure.transform.position = position;
-		treasure.AddComponent("HealthWholeComponent");
+		treasure.AddComponent("Potion20Component");
 		return treasure;
 	}
 	
@@ -59,9 +59,9 @@ class TreasureMaker{
 		if(randNum < 70)
 			return makeGold20(position);
 		if(randNum < 85)
-			return makeHealthQuarter(position);
+			return makePotion5(position);
 		if(randNum < 95)
-			return makeHealthWhole(position);
+			return makePotion20(position);
 		else
 			return makeCooldownRestore(position);
 	

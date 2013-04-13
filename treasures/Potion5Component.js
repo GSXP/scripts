@@ -1,21 +1,21 @@
 #pragma strict
 
-class Gold1Component extends TreasureComponent{
+class Potion5Component extends TreasureComponent{
 
-	function Gold1Component(){
+	function Potion5Component(){
 		super();
 	}
 	
 	function Start(){
 		var treasure : GameObject = this.gameObject;
 		var renderer = treasure.GetComponent(Renderer);
-		renderer.material.color = Color.yellow;
+		renderer.material.color = Color.red;
 		treasure.transform.localScale = new Vector3(.4, .4, .4);
 		super();
 	}
 
 	function collect(){
-		GameObject.Find("Sidekick").GetComponent(inventory).addGold(1);
+		GameObject.Find("Sidekick").GetComponent(inventory).addPotion(5);
 		super.collect();
 	}
 

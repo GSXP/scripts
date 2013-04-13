@@ -15,7 +15,7 @@ class Gold5Component extends TreasureComponent{
 	}
 
 	function collect(){
-		//TODO: Increase gold count by 5 when this treasure is collected.
+				GameObject.Find("Sidekick").GetComponent(inventory).addGold(5);
 		super.collect();
 	}
 
