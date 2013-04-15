@@ -11,34 +11,35 @@ function moved(movement : Vector3) {
 	var newFace : Vector3;
 	if (movement.x == 0 && movement.y == 0){
 
-		if(face != Vector3.zero){
+		if(!stopped){
 		
 			if(spriteAnimation.sprite != null){
 			
-				spriteAnimation.stop();
+				spriteAnimation.notifyDirection(Vector3.zero);
 			}		
 		}
 		stopped = true;	
 	}
 	else{
 	
-		
-		if(movement.x < 0 && (!spriteFacingLeft || stopped)){
+		if(movement.x < 0 && (stopped || !spriteFacingLeft)){
 		
 			if(spriteAnimation.sprite != null){
 				
-				spriteAnimation.playLeftAnimation();
+				spriteAnimation.notifyDirection(Vector3.left);
 			}
 			spriteFacingLeft = true;
 		}
-		else if(movement.x > 0 && spriteFacingLeft || stopped){
+		else if(movement.x > 0 && (stopped || spriteFacingLeft)){
 		
 			if(spriteAnimation.sprite != null){
 			
-				spriteAnimation.playRightAnimation();
+				spriteAnimation.notifyDirection(Vector3.right);
 			}
 			spriteFacingLeft = false;
 		}
+		
+		stopped = false;
 		
 		if (Mathf.Abs(movement.x) < Mathf.Abs(movement.y)) {
 			// More Vertical Movement
@@ -55,8 +56,6 @@ function moved(movement : Vector3) {
 				newFace = Vector3.left;
 			}
 		}
-		
-		stopped = false;
 	}
 	// If object changed face directions, make the necessary updates
 	if (newFace != face) {

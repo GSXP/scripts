@@ -63,7 +63,12 @@ function OnTriggerExit(objCollider : Collider) {
 // used to direct player toward a lost hero (different room)
 function HighlightPathToHero() {
 	// determine rooms occupied by hero/sidekick
-	var	heroRoom : GameObject = GameObject.Find('Hero').GetComponent(Behavior).getRoom();
+	var heroGameObject = GameObject.Find('Hero');
+	if(heroGameObject == null){
+	
+		return;
+	}
+	var	heroRoom : GameObject = heroGameObject.GetComponent(Behavior).getRoom();
 	var	sidekickRoom : GameObject = GameObject.Find('Sidekick').GetComponent(Behavior).getRoom();
 	// are they in the same room?
 	var inSameRoom = (heroRoom == sidekickRoom) ? true : false;

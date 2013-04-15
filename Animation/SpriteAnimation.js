@@ -3,48 +3,132 @@
 public class SpriteAnimation{
 
 	var sprite : Sprite;
-	var leftAnimation : UVAnimation;
-	var rightAnimation : UVAnimation;
-	var stoppedLeftAnimation : UVAnimation;
-	var stoppedRightAnimation : UVAnimation;
-	var currentFaceDirection : Vector3;
+	private var leftAnimation : UVAnimation;
+	private var rightAnimation : UVAnimation;
+	private var stoppedLeftAnimation : UVAnimation;
+	private var stoppedRightAnimation : UVAnimation;
+	private var attackLeftAnimation : UVAnimation;
+	private var attackRightAnimation : UVAnimation;
+	private var currentFaceDirection : Vector3;
+	private var attacking : boolean;
+	private var stopped : boolean;
 	
 	function SpriteAnimation(newSprite : Sprite){
 	
 		this.sprite = newSprite;
+		this.currentFaceDirection = Vector3.left;
+		stopped = true;
+		attacking = false;
 	}	
 	
-	function playAnimation(faceDirection : Vector3){
+	function notifyDirection(direction : Vector3){
 	
-		if(faceDirection == Vector3.right){
-	
-			currentFaceDirection = faceDirection;	
-			playRightAnimation();
-		}
-		else if(faceDirection == Vector3.left){
+		var tempCurrentFaceDirection = currentFaceDirection;
+		if(stopped){
 		
-			playLeftAnimation();
+			tempCurrentFaceDirection = Vector3.zero;
+		}
+		
+		if(direction != tempCurrentFaceDirection){
+		
+			if(attacking){
+				
+				if(direction == Vector3.left){
+				
+					playLeftAttackAnimation();
+					currentFaceDirection = direction;
+					stopped = false;
+				}
+				else if(direction == Vector3.right){
+				
+					playRightAttackAnimation();
+					currentFaceDirection = direction;
+					stopped = false;
+				}
+				else if(direction == Vector3.zero){
+				
+					stopped = true;
+				}
+			}
+			else{
+			
+				if(direction == Vector3.zero){
+				
+					
+					if(currentFaceDirection == Vector3.left){
+					
+						playStoppedLeftAnimation();
+					}
+					else if (currentFaceDirection == Vector3.right){
+						
+						playStoppedRightAnimation();
+					}
+					
+					stopped = true;
+				}
+				else if(direction == Vector3.left){
+				
+					currentFaceDirection = Vector3.left;
+					playLeftAnimation();
+					stopped = false;
+				}
+				else if(direction == Vector3.right){
+				
+					currentFaceDirection = Vector3.right;
+					playRightAnimation();
+					stopped = false;
+				}
+			}
 		}
 	}
 	
-	function stop(){
+	function startAttacking(){
 	
-		Debug.Log("gets to spriteAnimation.stop");
-		Debug.Log("currentFaceDirection: " + currentFaceDirection);
+		attacking = true;
 		if(currentFaceDirection == Vector3.right){
 		
-			Debug.Log("spriteAnimation stops right");
-			playStoppedRightAnimation();
+			playRightAttackAnimation();
 		}
 		else if(currentFaceDirection == Vector3.left){
 		
-			Debug.Log("spriteAnimation stops left");
-			playStoppedLeftAnimation();
+			playLeftAttackAnimation();
 		}
 	}
 	
-	function playStoppedLeftAnimation(){
+	function stopAttacking(){
 	
+		attacking = false;
+		if(stopped){
+		
+			if(currentFaceDirection == Vector3.left){
+			
+				playStoppedLeftAnimation();
+			}
+			else if(currentFaceDirection == Vector3.right){
+			
+				playStoppedRightAnimation();
+			}
+		}
+		else{
+			
+			if(currentFaceDirection == Vector3.left){
+			
+				playLeftAnimation();
+			}
+			else if(currentFaceDirection == Vector3.right){
+			
+				playRightAnimation();
+			}
+		}
+	}
+	
+	function isAttacking(){
+
+		return attacking;
+	}
+	
+	function playStoppedLeftAnimation(){
+		
 		sprite.PlayAnim(stoppedLeftAnimation);
 	}
 	
@@ -55,14 +139,22 @@ public class SpriteAnimation{
 
 	function playLeftAnimation(){
 	
-		currentFaceDirection = Vector3.left;
 		this.sprite.PlayAnim(leftAnimation);
 	}
 	
 	function playRightAnimation(){
 	
-		currentFaceDirection = Vector3.right;
 		this.sprite.PlayAnim(rightAnimation);
+	}
+	
+	function playLeftAttackAnimation(){
+	
+		this.sprite.PlayAnim(attackLeftAnimation);
+	}
+	
+	function playRightAttackAnimation(){
+	
+		this.sprite.PlayAnim(attackRightAnimation);
 	}
 	
 	function setLeftAnimation(leftAnimation : UVAnimation){
@@ -83,5 +175,15 @@ public class SpriteAnimation{
 	function setStoppedRightAnimation(stoppedRightAnimation : UVAnimation){
 	
 		this.stoppedRightAnimation = stoppedRightAnimation;
+	}
+	
+	function setAttackLeftAnimation(attackLeftAnimation : UVAnimation){
+	
+		this.attackLeftAnimation = attackLeftAnimation;
+	}
+	
+	function setAttackRightAnimation(attackRightAnimation : UVAnimation){
+	
+		this.attackRightAnimation = attackRightAnimation;
 	}
 };

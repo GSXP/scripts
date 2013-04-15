@@ -19,6 +19,7 @@ private var rightMouseDown : boolean = false;
 private var mousePosition : Vector3 = Vector3.zero;
 
 function Start() {
+
 	healType = GameObject.Find("TitleManager").GetComponent(TitleScreen).healType;
 	buffType = GameObject.Find("TitleManager").GetComponent(TitleScreen).buffType;
 	stats = gameObject.GetComponent(Stats);
